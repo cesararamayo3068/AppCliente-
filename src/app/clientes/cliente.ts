@@ -1,4 +1,4 @@
-export class Cleinte {
+export class Cliente {
   id: number;
   nombre: string;
   apellido: string;
