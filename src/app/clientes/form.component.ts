@@ -36,17 +36,29 @@ export class FormComponent implements OnInit {
   }
 
   public create(): void {
-    this.clienteService
-      .create(this.cliente)
+    this.clienteService.create(this.cliente)
       // despues de suscribirnos en el Observable
       // nos muestra la respuesta y nos redirige al listado clientes
-      .subscribe((cliente) => {
+      .subscribe((respuesta) => {
         this.router.navigate(['/clientes']);
-        swal.fire(
-          'Cliente Guardado',
-          `Cliente ${cliente.nombre} creado con exito`,
+        swal.fire('Cliente Guardado',
+          `Cliente ${respuesta.cliente.nombre} creado con exito!`,
           'success'
         );
       });
+  }
+
+  update():void{
+    this.clienteService.update(this.cliente)
+    .subscribe(
+      respuesta=> {
+        this.router.navigate(['/clientes'])
+        swal.fire(
+          'Cliente Actualizado',
+          `${respuesta.mensaje}: ${respuesta.cliente.nombre}`,
+          'success'
+        );
+      }
+    )
   }
 }
