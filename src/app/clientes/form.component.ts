@@ -12,6 +12,8 @@ export class FormComponent implements OnInit {
   public cliente: Cliente = new Cliente();
   public titulo: string = 'Crear Cliente';
 
+  public errores:string[];
+
   //inyectamos por constructor la clase ClienteService
   // inyectamos router del tipo Router para manejar las rutas
   constructor(
@@ -39,13 +41,17 @@ export class FormComponent implements OnInit {
     this.clienteService.create(this.cliente)
       // despues de suscribirnos en el Observable
       // nos muestra la respuesta y nos redirige al listado clientes
-      .subscribe((respuesta) => {
+      .subscribe((cliente) => {
         this.router.navigate(['/clientes']);
-        swal.fire('Cliente Guardado',
-          `Cliente ${respuesta.cliente.nombre} creado con exito!`,
-          'success'
-        );
-      });
+        swal.fire('Cliente Guardado',`El cliente ${cliente.nombre} creado con exito!`,'success');
+      },
+      err =>{
+        this.errores=err.error.errors as string[];
+        console.log('codigo del error desde el backend ' + err.status);
+        console.error(err.error.errors);
+
+      }
+      );
   }
 
   update():void{
@@ -53,11 +59,13 @@ export class FormComponent implements OnInit {
     .subscribe(
       respuesta=> {
         this.router.navigate(['/clientes'])
-        swal.fire(
-          'Cliente Actualizado',
-          `${respuesta.mensaje}: ${respuesta.cliente.nombre}`,
-          'success'
-        );
+        swal.fire('Cliente Actualizado',`${respuesta.mensaje}: ${respuesta.cliente.nombre}`,'success');
+      },
+      err =>{
+        this.errores=err.error.errors as string[];
+        console.log('codigo del error desde el backend ' + err.status);
+        console.error(err.error.errors);
+
       }
     )
   }
